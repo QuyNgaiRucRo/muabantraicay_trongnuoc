@@ -3,95 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <style>
-  /* Cài đặt phông chữ và bố cục chung */
-  body { font-family: 'Arial', sans-serif; background-color: #f9f9f9; padding: 20px; }
+  /* Xóa khoảng trắng thừa của trang */
+  body { 
+    font-family: 'Arial', sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background-color: #fff;
+    overflow-y: auto; /* Cho phép cuộn nhẹ nếu màn hình quá bé */
+  }
   
-  /* Lưới sản phẩm */
+  /* LƯỚI 3 CỘT CỐ ĐỊNH */
   .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr; /* Ép cứng 3 cột bằng nhau */
+    gap: 10px; /* Khoảng cách giữa các ô */
     padding: 10px;
-    height: 95vh;
     box-sizing: border-box;
   }
 
-  /* Thẻ sản phẩm */
+  /* Thẻ sản phẩm nhỏ gọn */
   .product-card {
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 8px;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
 
+  /* Ảnh thu nhỏ chiều cao */
   .product-image {
     width: 100%;
-    height: 200px;
+    height: 100px; /* Cố định chiều cao ảnh nhỏ lại */
     object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
   }
 
   .product-name {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
     color: #333;
-    margin: 10px 0;
-    text-transform: uppercase;
+    margin: 5px 0;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; /* Tên dài sẽ hiện dấu ... */
   }
 
   .product-price {
+    font-size: 13px;
     color: #333;
-    font-size: 14px;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
   }
 
-  /* Các nút bấm */
+  /* Nút bấm nằm ngang (Side-by-side) để tiết kiệm chỗ */
+  .btn-group {
+    display: flex;
+    gap: 5px;
+  }
+
   .btn {
-    display: block;
-    width: 100%;
-    padding: 10px 0;
-    margin-top: 5px;
+    flex: 1; /* Chia đều chiều rộng */
+    padding: 6px 0;
     border: none;
+    border-radius: 3px;
     cursor: pointer;
-    font-size: 14px;
-    text-decoration: none;
+    font-size: 11px;
     color: white;
-    transition: 0.3s;
+    font-weight: bold;
   }
 
-  .btn-view { background-color: #d32f2f; } /* Màu đỏ */
-  .btn-view:hover { background-color: #b71c1c; }
+  .btn-view { background-color: #d32f2f; } /* Đỏ */
+  .btn-view:hover { opacity: 0.9; }
 
-  .btn-add { background-color: #388e3c; margin-top: 10px; } /* Màu xanh lá */
-  .btn-add:hover { background-color: #2e7d32; }
+  .btn-add { background-color: #388e3c; } /* Xanh lá */
+  .btn-add:hover { opacity: 0.9; }
 
-  /* Khu vực Giỏ hàng */
-  #cart-section {
+  /* Giỏ hàng nhỏ góc phải */
+  #cart-floating {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    background: white;
-    border: 2px solid #d32f2f;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    display: none; /* Ẩn khi chưa có hàng */
-    z-index: 1000;
+    bottom: 10px;
+    right: 10px;
+    background: #d32f2f;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 999;
+    display: none;
   }
-
-  .cart-header { font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
-  .cart-item { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
-  .cart-total { font-weight: bold; color: #d32f2f; text-align: right; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 5px; }
-  
-  .btn-checkout { background-color: #d32f2f; width: 100%; margin-top: 10px; }
-
 </style>
 </head>
 <body>
@@ -99,12 +104,8 @@
 <div class="grid-container" id="product-list">
   </div>
 
-<div id="cart-section">
-  <div class="cart-header">Giỏ hàng của bạn</div>
-  <div id="cart-items"></div>
-  <div class="cart-total">Tổng: <span id="total-price">0</span>đ</div>
-  <button class="btn btn-checkout" onclick="checkout()">Thanh toán ngay</button>
-  <button class="btn" style="background:#777; margin-top:5px" onclick="toggleCart()">Đóng / Mở</button>
+<div id="cart-floating" onclick="alert('Chức năng thanh toán (như code trước)')">
+  Giỏ hàng: <span id="cart-count">0</span> món
 </div>
 
 <script>
