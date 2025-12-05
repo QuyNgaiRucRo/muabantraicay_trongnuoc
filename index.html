@@ -3,100 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <style>
-  /* Xóa khoảng trắng thừa của trang */
+  /* Cài đặt chung - Giảm lề body để tận dụng tối đa diện tích */
   body { 
     font-family: 'Arial', sans-serif; 
-    margin: 0; 
+    background-color: #fff; 
     padding: 0; 
-    background-color: #fff;
-    overflow-y: auto; /* Cho phép cuộn nhẹ nếu màn hình quá bé */
+    margin: 0;
+    overflow-y: hidden; /* Cố gắng ẩn thanh cuộn nếu vừa khít */
   }
   
-  /* LƯỚI 3 CỘT CỐ ĐỊNH */
+  /* Lưới 3x3 cố định */
   .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* Ép cứng 3 cột bằng nhau */
-    gap: 10px; /* Khoảng cách giữa các ô */
+    grid-template-columns: repeat(3, 1fr); /* Bắt buộc 3 cột */
+    gap: 10px; /* Khoảng cách giữa các ô nhỏ lại */
     padding: 10px;
+    height: 95vh; /* Chiều cao tự cân đối theo màn hình */
     box-sizing: border-box;
   }
 
   /* Thẻ sản phẩm nhỏ gọn */
   .product-card {
     background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 8px; /* Giảm đệm bên trong */
     text-align: center;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
   }
 
-  /* Ảnh thu nhỏ chiều cao */
+  /* Ảnh thu nhỏ tối đa */
   .product-image {
     width: 100%;
-    height: 100px; /* Cố định chiều cao ảnh nhỏ lại */
+    height: 90px; /* Chiều cao ảnh nhỏ để vừa màn hình */
     object-fit: cover;
     border-radius: 4px;
     margin-bottom: 5px;
   }
 
+  /* Tên sản phẩm nhỏ hơn */
   .product-name {
-    font-size: 13px;
+    font-size: 13px; /* Cỡ chữ nhỏ */
     font-weight: bold;
     color: #333;
-    margin: 5px 0;
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; /* Tên dài sẽ hiện dấu ... */
+    margin: 3px 0;
+    text-transform: uppercase;
+    white-space: nowrap; /* Không xuống dòng tên dài */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
   }
 
   .product-price {
-    font-size: 13px;
-    color: #333;
-    margin-bottom: 8px;
+    color: #d32f2f;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 5px;
   }
 
-  /* Nút bấm nằm ngang (Side-by-side) để tiết kiệm chỗ */
+  /* Nút bấm nhỏ gọn */
   .btn-group {
+    width: 100%;
     display: flex;
     gap: 5px;
   }
 
   .btn {
-    flex: 1; /* Chia đều chiều rộng */
+    flex: 1;
     padding: 6px 0;
     border: none;
-    border-radius: 3px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 11px; /* Chữ nút nhỏ */
+    border-radius: 3px;
     color: white;
-    font-weight: bold;
+    transition: 0.2s;
   }
 
-  .btn-view { background-color: #d32f2f; } /* Đỏ */
-  .btn-view:hover { opacity: 0.9; }
+  .btn-view { background-color: #d32f2f; }
+  .btn-view:hover { background-color: #b71c1c; }
 
-  .btn-add { background-color: #388e3c; } /* Xanh lá */
-  .btn-add:hover { opacity: 0.9; }
+  .btn-add { background-color: #388e3c; }
+  .btn-add:hover { background-color: #2e7d32; }
 
-  /* Giỏ hàng nhỏ góc phải */
-  #cart-floating {
+  /* Giỏ hàng tinh chỉnh nhỏ lại */
+  #cart-section {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    background: #d32f2f;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 13px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 999;
+    width: 260px;
+    background: white;
+    border: 2px solid #d32f2f;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     display: none;
+    z-index: 1000;
+    font-size: 12px;
   }
+
+  .cart-header { font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-bottom: 5px; }
+  .cart-item { display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .cart-total { font-weight: bold; color: #d32f2f; text-align: right; margin-top: 5px; border-top: 1px solid #ddd; padding-top: 3px; }
+  
+  .btn-checkout { background-color: #d32f2f; width: 100%; margin-top: 5px; padding: 8px 0; }
+
 </style>
 </head>
 <body>
@@ -104,12 +118,16 @@
 <div class="grid-container" id="product-list">
   </div>
 
-<div id="cart-floating" onclick="alert('Chức năng thanh toán (như code trước)')">
-  Giỏ hàng: <span id="cart-count">0</span> món
+<div id="cart-section">
+  <div class="cart-header">Giỏ hàng (<span id="cart-count">0</span> món)</div>
+  <div id="cart-items" style="max-height: 100px; overflow-y: auto;"></div>
+  <div class="cart-total">Tổng: <span id="total-price">0</span>đ</div>
+  <button class="btn btn-checkout" onclick="checkout()">Thanh toán</button>
+  <button class="btn" style="background:#777; margin-top:5px; width:100%" onclick="toggleCart()">Đóng</button>
 </div>
 
 <script>
-  // ĐÚNG 9 SẢN PHẨM CHO LƯỚI 3x3
+  // Dữ liệu 9 sản phẩm để vừa đẹp khung 3x3
   const products = [
     { id: 1, name: "Chôm chôm Vĩnh Long", price: 48000, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Rambutan_white_background.jpg/640px-Rambutan_white_background.jpg" },
     { id: 2, name: "Dâu tây Đà Lạt", price: 190000, img: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=200" },
@@ -122,33 +140,78 @@
     { id: 9, name: "Sầu Riêng Ri6", price: 150000, img: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?w=200" }
   ];
 
-  let cartCount = 0;
+  let cart = [];
 
-  function render() {
+  function renderProducts() {
     const container = document.getElementById('product-list');
     products.forEach(p => {
-      container.innerHTML += `
+      const card = `
         <div class="product-card">
-          <img src="${p.img}" class="product-image">
+          <img src="${p.img}" alt="${p.name}" class="product-image">
           <div class="product-name">${p.name}</div>
-          <div class="product-price">${p.price.toLocaleString('vi-VN')} đ/Kg</div>
+          <div class="product-price">${p.price.toLocaleString('vi-VN')}đ/Kg</div>
           <div class="btn-group">
             <button class="btn btn-view">Xem</button>
-            <button class="btn btn-add" onclick="add()">Mua</button>
+            <button class="btn btn-add" onclick="addToCart(${p.id})">Mua</button>
           </div>
         </div>
       `;
+      container.innerHTML += card;
     });
   }
 
-  function add() {
-    cartCount++;
-    const cartBtn = document.getElementById('cart-floating');
-    document.getElementById('cart-count').innerText = cartCount;
-    cartBtn.style.display = 'block';
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    cart.push(product);
+    updateCart();
+    document.getElementById('cart-section').style.display = 'block';
   }
 
-  render();
+  function updateCart() {
+    const cartItemsDiv = document.getElementById('cart-items');
+    const totalSpan = document.getElementById('total-price');
+    const countSpan = document.getElementById('cart-count');
+    cartItemsDiv.innerHTML = '';
+    
+    let total = 0;
+    const counts = {};
+    cart.forEach(x => { counts[x.name] = (counts[x.name] || 0) + 1; });
+    
+    for (const [name, count] of Object.entries(counts)) {
+       const itemPrice = products.find(p => p.name === name).price;
+       total += itemPrice * count;
+       cartItemsDiv.innerHTML += `
+         <div class="cart-item">
+           <span>${name} (x${count})</span>
+           <span>${(itemPrice * count).toLocaleString('vi-VN')}</span>
+         </div>
+       `;
+    }
+    totalSpan.innerText = total.toLocaleString('vi-VN');
+    countSpan.innerText = cart.length;
+  }
+
+  function toggleCart() {
+     const cartSec = document.getElementById('cart-section');
+     cartSec.style.display = cartSec.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function checkout() {
+    if(cart.length === 0) { alert("Giỏ hàng trống!"); return; }
+    let message = "Đơn hàng mới:\n";
+    const counts = {};
+    cart.forEach(x => { counts[x.name] = (counts[x.name] || 0) + 1; });
+    let total = 0;
+    for (const [name, count] of Object.entries(counts)) {
+       const itemPrice = products.find(p => p.name === name).price;
+       total += itemPrice * count;
+       message += `- ${name}: ${count}kg\n`;
+    }
+    message += `Tổng: ${total.toLocaleString('vi-VN')}đ`;
+    alert(message + "\n\n(Chụp màn hình gửi cho shop nhé!)");
+  }
+
+  renderProducts();
 </script>
 
 </body>
