@@ -1,6 +1,6 @@
 // script.js
 
-// Dữ liệu sản phẩm (Giữ nguyên)
+// Dữ liệu sản phẩm
 const products = [
   { id: 1, name: "Chôm chôm Vĩnh Long", price: 48000, img: "https://clv.vn/wp-content/uploads/2019/10/chom-chom-globalgap-min.jpg", desc: "Chôm chôm tróc hạt, vị ngọt đậm đà, cùi dày. Đặc sản Vĩnh Long chính hiệu." },
   { id: 2, name: "Dâu tây Đà Lạt", price: 190000, img: "https://traicayvuongtron.vn/resources/cache/original_xxxxx/WEBSITE%202023/tim%20hieu%20them/blog/kinh%20nghiem%2Cmeo%20vat/trai%20cay/trai%20cay%20dac%20san/daudalatlagi/dau-tay-da-lat.gif", desc: "Dâu tây Đà Lạt tươi ngon, hái tại vườn. Vị chua ngọt thanh mát, giàu vitamin." },
@@ -16,7 +16,7 @@ const products = [
 let cart = [];
 let currentProductId = null;
 
-// Hàm hiển thị sản phẩm ra màn hình (Giữ nguyên)
+// Hàm hiển thị sản phẩm ra màn hình
 function render() {
   const container = document.getElementById('product-list');
   container.innerHTML = ''; 
@@ -88,15 +88,10 @@ function decreaseItem(id) {
     const index = cart.findIndex(item => item.id === id);
     if (index !== -1) {
         if (cart[index].qty > 1) {
-            cart[index].qty--; // Giảm số lượng
-            alert(`Đã giảm số lượng ${cart[index].name}.`);
+            cart[index].qty--; 
         } else {
-            // Nếu số lượng là 1, hỏi xem có muốn xóa không
-            if (confirm(`Bạn có muốn xóa ${cart[index].name} khỏi giỏ hàng không?`)) {
-                cart.splice(index, 1); // Xóa khỏi mảng
-                alert(`Đã xóa ${cart[index].name} khỏi giỏ.`);
+            cart.splice(index, 1);
             }
-        }
     }
     updateCartList(); // Cập nhật lại giao diện
 }
@@ -121,7 +116,7 @@ function toggleCart() {
 }
 
 
-// --- XỬ LÝ THÊM VÀO GIỎ (Điều chỉnh để gọi updateCartList) ---
+// --- XỬ LÝ THÊM VÀO GIỎ ---
 function addToCart(id, quantity) {
   const product = products.find(p => p.id === id);
   
@@ -136,18 +131,24 @@ function addToCart(id, quantity) {
   updateCartList(); // Cập nhật danh sách chi tiết
 }
 
-// --- XỬ LÝ POPUP VÀ CHECKOUT (Giữ nguyên) ---
+// --- XỬ LÝ POPUP VÀ THANH TOÁN ---
 function openModal(id) {
   const p = products.find(x => x.id === id);
   currentProductId = id;
   
+  // Điền thông tin vào Popup
   document.getElementById('m-img').src = p.img;
   document.getElementById('m-name').innerText = p.name;
   document.getElementById('m-price').innerText = p.price.toLocaleString('vi-VN') + 'đ';
   document.getElementById('m-desc').innerText = p.desc;
   document.getElementById('m-qty').value = 1;
   
+  // Hiện popup
   document.getElementById('product-modal').style.display = 'flex';
+
+  // Sửa: Buộc nội dung IFRAME cuộn về đầu (0, 0)
+  // Đảm bảo popup luôn hiển thị ở trung tâm của khung nhúng
+  window.scrollTo(0, 0); 
 }
 
 function closeModal() {

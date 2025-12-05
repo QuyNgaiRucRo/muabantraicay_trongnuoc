@@ -72,8 +72,7 @@ body {
 .btn-add:hover { opacity: 0.9; }
 
 
-/* --- GIAO DIỆN CHI TIẾT SẢN PHẨM (MODAL POPUP) --- */
-/* ... (Giữ nguyên các style cho Modal) ... */
+/* --- GIAO DIỆN CHI TIẾT SẢN PHẨM --- */
 .modal {
   display: none; 
   position: fixed; 
@@ -94,7 +93,7 @@ body {
   position: relative;
   animation: fadeIn 0.3s;
 }
-/* ... (Các style chi tiết bên trong Modal) ... */
+/* ... (Phong cách chi tiết bên trong Modal) ... */
 .modal-left {
   flex: 1; background: #f1f1f1; display: flex; align-items: center; justify-content: center;
 }
@@ -133,8 +132,7 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
 
-/* --- KHU VỰC GIỎ HÀNG CHI TIẾT CỐ ĐỊNH (#cart-section) --- */
-/* Đảm bảo nó được cố định ở góc dưới bên phải */
+/* --- KHU VỰC GIỎ HÀNG CHI TIẾT CỐ ĐỊNH --- */
 #cart-section {
     position: fixed;
     bottom: 20px;
@@ -156,7 +154,7 @@ body {
 .btn-checkout { background-color: #d32f2f; width: 100%; margin-top: 10px; }
 
 
-/* --- RESPONSIVE (ĐIỆN THOẠI) --- */
+/* --- Phản hồi (ĐIỆN THOẠI) --- */
 @media (max-width: 600px) {
   .grid-container { grid-template-columns: 1fr 1fr; padding-bottom: 20px; }
   .product-image { height: 120px; }
