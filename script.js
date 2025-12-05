@@ -2,15 +2,15 @@
 
 // Dữ liệu sản phẩm 
 const products = [
-  { id: 1, name: "Chôm chôm Vĩnh Long", price: 48000, img: "https://clv.vn/wp-content/uploads/2019/10/chom-chom-globalgap-min.jpg", desc: "Chôm chôm tróc hạt, vị ngọt đậm đà, cùi dày. Đặc sản Vĩnh Long chính hiệu." },
-  { id: 2, name: "Dâu tây Đà Lạt", price: 190000, img: "https://traicayvuongtron.vn/resources/cache/original_xxxxx/WEBSITE%202023/tim%20hieu%20them/blog/kinh%20nghiem%2Cmeo%20vat/trai%20cay/trai%20cay%20dac%20san/daudalatlagi/dau-tay-da-lat.gif", desc: "Dâu tây Đà Lạt tươi ngon, hái tại vườn. Vị chua ngọt thanh mát, giàu vitamin." },
-  { id: 3, name: "Dừa Bến Tre", price: 15000, img: "https://media.loveitopcdn.com/22928/thumb/dua-xiem-xanh-ben-tre.jpg", desc: "Dừa xiêm xanh Bến Tre nước ngọt lịm, cùi dừa vừa ăn. Giải khát tuyệt vời." },
-  { id: 4, name: "Nho xanh Ninh Thuận", price: 100000, img: "https://nongsandungha.com/wp-content/uploads/2024/08/nho-xanh-ninh-thuan.jpg", desc: "Nho xanh Ninh Thuận giòn, ngọt, không hạt. Chùm to đẹp mắt." },
-  { id: 5, name: "Xoài Cát Hòa Lộc", price: 80000, img: "https://cdn.tgdd.vn/Files/2017/12/03/1047079/nguon-goc-xoai-cat-hoa-loc-va-cach-chon-xoai-cat-hoa-loc-tuoi-ngon-202302251347125690.jpg", desc: "Vua của các loại xoài. Xoài Cát Hòa Lộc thơm lừng, thịt vàng ươm, ngọt sắc." },
-  { id: 6, name: "Vải thiều Thanh Hà", price: 90000, img: "https://cdn.tgdd.vn/2021/07/CookProduct/1-1200x676-6.jpg", desc: "Vải thiều hạt nhỏ, cùi dày, mọng nước. Đặc sản nổi tiếng miền Bắc." },
-  { id: 7, name: "Thanh Long Bình Thuận", price: 30000, img: "https://thucphamvanquy.com/wp-content/uploads/2019/10/thanh-long-ru%E1%BB%99t-tr%E1%BA%AFng.png", desc: "Thanh long ruột trắng Bình Thuận, vị ngọt thanh, tính mát." },
-  { id: 8, name: "Măng cụt Chợ Lách", price: 75000, img: "https://cdn-images.vtv.vn/zoom/700_438/2019/6/15/photo-2-1500599816327-15269608981031547982463-156057123979899840711.jpg", desc: "Măng cụt Chợ Lách múi trắng ngần, ngọt thanh xen lẫn vị chua nhẹ hấp dẫn." },
-  { id: 9, name: "Sầu Riêng Ri6", price: 150000, img: "https://product.hstatic.net/200000157781/product/sau_rieng_ri6_977b4b436948421fabd583bbd83f2fb8.png", desc: "Sầu riêng Ri6 múi vàng hạt lép, béo ngậy, thơm nức mũi."}
+  { id: 1, name: "Chôm chôm Vĩnh Long", price: 48000, img: "TrongNuoc/ChomChom.jpg", desc: "Chôm chôm tróc hạt, vị ngọt đậm đà, cùi dày. Đặc sản Vĩnh Long chính hiệu." },
+  { id: 2, name: "Dâu tây Đà Lạt", price: 190000, img: "TrongNuoc/dau.jpg", desc: "Dâu tây Đà Lạt tươi ngon, hái tại vườn. Vị chua ngọt thanh mát, giàu vitamin." },
+  { id: 3, name: "Dừa Bến Tre", price: 15000, img: "TrongNuoc/dua.jpg", desc: "Dừa xiêm xanh Bến Tre nước ngọt lịm, cùi dừa vừa ăn. Giải khát tuyệt vời." },
+  { id: 4, name: "Nho xanh Ninh Thuận", price: 100000, img: "TrongNuoc/nho.jpg", desc: "Nho xanh Ninh Thuận giòn, ngọt, không hạt. Chùm to đẹp mắt." },
+  { id: 5, name: "Xoài Cát Hòa Lộc", price: 80000, img: "TrongNuoc/xoai.jpg", desc: "Vua của các loại xoài. Xoài Cát Hòa Lộc thơm lừng, thịt vàng ươm, ngọt sắc." },
+  { id: 6, name: "Vải thiều Thanh Hà", price: 90000, img: "TrongNuoc/vai.jpg", desc: "Vải thiều hạt nhỏ, cùi dày, mọng nước. Đặc sản nổi tiếng miền Bắc." },
+  { id: 7, name: "Thanh Long Bình Thuận", price: 30000, img: "TrongNuoc/thanhlong.jpg", desc: "Thanh long ruột trắng Bình Thuận, vị ngọt thanh, tính mát." },
+  { id: 8, name: "Măng cụt Chợ Lách", price: 75000, img: "TrongNuoc/mangcut.jpg", desc: "Măng cụt Chợ Lách múi trắng ngần, ngọt thanh xen lẫn vị chua nhẹ hấp dẫn." },
+  { id: 9, name: "Sầu Riêng Ri6", price: 150000, img: "TrongNuoc/saurieng.jpg", desc: "Sầu riêng Ri6 múi vàng hạt lép, béo ngậy, thơm nức mũi."}
 ];
 
 let cart = [];
