@@ -3,25 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <style>
-  /* Xóa khoảng trắng thừa của trang */
+  /* Thiết lập chung và lưới 3x3 (Hoạt động tốt trên cả máy tính và điện thoại) */
   body { 
     font-family: 'Arial', sans-serif; 
     margin: 0; 
     padding: 0; 
     background-color: #fff;
-    overflow-y: auto; /* Cho phép cuộn nhẹ nếu màn hình quá bé */
+    overflow-x: hidden;
   }
   
-  /* LƯỚI 3 CỘT CỐ ĐỊNH */
   .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* Ép cứng 3 cột bằng nhau */
-    gap: 10px; /* Khoảng cách giữa các ô */
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 10px; 
     padding: 10px;
     box-sizing: border-box;
   }
 
-  /* Thẻ sản phẩm nhỏ gọn */
   .product-card {
     background: white;
     border: 1px solid #e0e0e0;
@@ -34,10 +32,9 @@
     justify-content: space-between;
   }
 
-  /* Ảnh thu nhỏ chiều cao */
   .product-image {
     width: 100%;
-    height: 100px; /* Cố định chiều cao ảnh nhỏ lại */
+    height: 100px;
     object-fit: cover;
     border-radius: 4px;
     margin-bottom: 5px;
@@ -50,7 +47,7 @@
     margin: 5px 0;
     white-space: nowrap; 
     overflow: hidden; 
-    text-overflow: ellipsis; /* Tên dài sẽ hiện dấu ... */
+    text-overflow: ellipsis;
   }
 
   .product-price {
@@ -59,14 +56,13 @@
     margin-bottom: 8px;
   }
 
-  /* Nút bấm nằm ngang (Side-by-side) để tiết kiệm chỗ */
   .btn-group {
     display: flex;
     gap: 5px;
   }
 
   .btn {
-    flex: 1; /* Chia đều chiều rộng */
+    flex: 1; 
     padding: 6px 0;
     border: none;
     border-radius: 3px;
@@ -76,13 +72,13 @@
     font-weight: bold;
   }
 
-  .btn-view { background-color: #d32f2f; } /* Đỏ */
-  .btn-view:hover { opacity: 0.9; }
+  .btn-view { background-color: #d32f2f; }
+  .btn-add { background-color: #388e3c; }
 
-  .btn-add { background-color: #388e3c; } /* Xanh lá */
-  .btn-add:hover { opacity: 0.9; }
 
-  /* Giỏ hàng nhỏ góc phải */
+  /* --- GIỎ HÀNG LINH HOẠT (FIXED CART) --- */
+
+  /* Màn hình lớn */
   #cart-floating {
     position: fixed;
     bottom: 10px;
@@ -90,12 +86,36 @@
     background: #d32f2f;
     color: white;
     padding: 8px 15px;
-    border-radius: 20px;
+    border-radius: 20px; 
     font-size: 13px;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     z-index: 999;
     display: none;
+  }
+
+  /* Màn hình nhỏ */
+  @media (max-width: 600px) {
+    #cart-floating {
+      bottom: 0;
+      right: 0;
+      left: 0;
+      width: 100%; 
+      border-radius: 0; 
+      text-align: center;
+      padding: 15px 0; 
+      font-size: 16px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr 1fr;
+        padding-bottom: 60px;
+    }
+    
+     .product-image {
+        height: 120px; 
+     }
   }
 </style>
 </head>
@@ -104,86 +124,65 @@
 <div class="grid-container" id="product-list">
   </div>
 
-<div id="cart-floating" onclick="alert('Chức năng thanh toán (như code trước)')">
-  Giỏ hàng: <span id="cart-count">0</span> món
+<div id="cart-floating" onclick="checkout()">
+  Giỏ hàng: <span id="cart-count">0</span> món | Bấm để Thanh toán
 </div>
 
 <script>
-  // Dữ liệu sản phẩm
+  // DỮ LIỆU SẢN PHẨM (Đã dùng ảnh của bạn)
   const products = [
-    { id: 1, name: "Chôm chôm Vĩnh Long", price: 48000, img: "https://clv.vn/wp-content/uploads/2019/10/chom-chom-globalgap-min.jpg" },
-    { id: 2, name: "Dâu tây Đà Lạt", price: 190000, img: "https://traicayvuongtron.vn/resources/cache/original_xxxxx/WEBSITE%202023/tim%20hieu%20them/blog/kinh%20nghiem%2Cmeo%20vat/trai%20cay/trai%20cay%20dac%20san/daudalatlagi/dau-tay-da-lat.gif" },
-    { id: 3, name: "Dừa Bến Tre", price: 15000, img: "https://media.loveitopcdn.com/22928/thumb/dua-xiem-xanh-ben-tre.jpg" },
-    { id: 4, name: "Nho xanh Ninh Thuận", price: 100000, img: "https://nongsandungha.com/wp-content/uploads/2024/08/nho-xanh-ninh-thuan.jpg" },
-    { id: 5, name: "Xoài Cát Hòa Lộc", price: 80000, img: "https://cdn.tgdd.vn/Files/2017/12/03/1047079/nguon-goc-xoai-cat-hoa-loc-va-cach-chon-xoai-cat-hoa-loc-tuoi-ngon-202302251347125690.jpg" },
+    { id: 1, name: "Chôm chôm Vĩnh Long", price: 48000, img: "https://clv.vn/wp-content/uploads/2019/10/chom-chom-globalgap-min.jpg"},
+    { id: 2, name: "Dâu tây Đà Lạt", price: 190000, img: "https://traicayvuongtron.vn/resources/cache/original_xxxxx/WEBSITE%202023/tim%20hieu%20them/blog/kinh%20nghiem%2Cmeo%20vat/trai%20cay/trai%20cay%20dac%20san/daudalatlagi/dau-tay-da-lat.gif"},
+    { id: 3, name: "Dừa Bến Tre", price: 15000, img: "https://media.loveitopcdn.com/22928/thumb/dua-xiem-xanh-ben-tre.jpg"},
+    { id: 4, name: "Nho xanh Ninh Thuận", price: 100000, img: "https://nongsandungha.com/wp-content/uploads/2024/08/nho-xanh-ninh-thuan.jpg"},
+    { id: 5, name: "Xoài Cát Hòa Lộc", price: 80000, img: "https://cdn.tgdd.vn/Files/2017/12/03/1047079/nguon-goc-xoai-cat-hoa-loc-va-cach-chon-xoai-cat-hoa-loc-tuoi-ngon-202302251347125690.jpg"},
     { id: 6, name: "Vải thiều Thanh Hà", price: 90000, img: "https://cdn.tgdd.vn/2021/07/CookProduct/1-1200x676-6.jpg"},
-    { id: 7, name: "Thanh Long Bình Thuận", price: 30000, img: "https://thucphamvanquy.com/wp-content/uploads/2019/10/thanh-long-ru%E1%BB%99t-tr%E1%BA%AFng.png" },
-    { id: 8, name: "Măng cụt Chợ Lách", price: 75000, img: "https://cdn-images.vtv.vn/zoom/700_438/2019/6/15/photo-2-1500599816327-15269608981031547982463-156057123979899840711.jpg" },
-    { id: 9, name: "Sầu Riêng Ri6", price: 150000, img: "https://product.hstatic.net/200000157781/product/sau_rieng_ri6_977b4b436948421fabd583bbd83f2fb8.png" }
+    { id: 7, name: "Thanh Long Bình Thuận", price: 30000, img: "https://thucphamvanquy.com/wp-content/uploads/2019/10/thanh-long-ru%E1%BB%99t-tr%E1%BA%AFng.png"},
+    { id: 8, name: "Măng cụt Chợ Lách", price: 75000, img: "https://cdn-images.vtv.vn/zoom/700_438/2019/6/15/photo-2-1500599816327-15269608981031547982463-156057123979899840711.jpg"},
+    { id: 9, name: "Sầu Riêng Ri6", price: 150000, img: "https://product.hstatic.net/200000157781/product/sau_rieng_ri6_977b4b436948421fabd583bbd83f2fb8.png"}
   ];
 
+  // KHAI BÁO GIỎ HÀNG ĐỂ CHỨC NĂNG PUSH HOẠT ĐỘNG
   let cart = [];
 
-  // Hàm hiển thị sản phẩm ra màn hình
-  function renderProducts() {
+  function render() {
     const container = document.getElementById('product-list');
+    container.innerHTML = ''; // Đảm bảo chỉ hiển thị một lần
     products.forEach(p => {
-      const card = `
+      container.innerHTML += `
         <div class="product-card">
-          <img src="${p.img}" alt="${p.name}" class="product-image">
+          <img src="${p.img}" class="product-image">
           <div class="product-name">${p.name}</div>
-          <div class="product-price">${p.price.toLocaleString('vi-VN')} /Kg</div>
-          <button class="btn btn-view">Xem thêm</button>
-          <button class="btn btn-add" onclick="addToCart(${p.id})">Thêm vào giỏ</button>
+          <div class="product-price">${p.price.toLocaleString('vi-VN')} đ/Kg</div>
+          <div class="btn-group">
+            <button class="btn btn-view">Xem</button>
+            <button class="btn btn-add" onclick="add(${p.id})">Mua</button>
+          </div>
         </div>
       `;
-      container.innerHTML += card;
     });
   }
 
-  // Hàm thêm vào giỏ
-  function addToCart(id) {
+  function add(id) {
     const product = products.find(p => p.id === id);
     cart.push(product);
-    updateCart();
-    document.getElementById('cart-section').style.display = 'block';
+    updateCartDisplay();
+    // Báo hiệu trực quan nhỏ cho khách hàng
+    const addBtn = event.currentTarget;
+    addBtn.innerText = 'Đã thêm!';
+    setTimeout(() => { addBtn.innerText = 'Mua'; }, 500);
+  }
+  
+  function updateCartDisplay() {
+    const cartBtn = document.getElementById('cart-floating');
+    document.getElementById('cart-count').innerText = cart.length;
+    cartBtn.style.display = cart.length > 0 ? 'block' : 'none';
   }
 
-  // Hàm cập nhật giỏ hàng
-  function updateCart() {
-    const cartItemsDiv = document.getElementById('cart-items');
-    const totalSpan = document.getElementById('total-price');
-    cartItemsDiv.innerHTML = '';
-    
-    let total = 0;
-    // Gom nhóm sản phẩm giống nhau
-    const counts = {};
-    cart.forEach(x => { counts[x.name] = (counts[x.name] || 0) + 1; });
-    
-    // Hiển thị danh sách rút gọn
-    for (const [name, count] of Object.entries(counts)) {
-       const itemPrice = products.find(p => p.name === name).price;
-       total += itemPrice * count;
-       cartItemsDiv.innerHTML += `
-         <div class="cart-item">
-           <span>${name} (x${count})</span>
-           <span>${(itemPrice * count).toLocaleString('vi-VN')}đ</span>
-         </div>
-       `;
-    }
-    totalSpan.innerText = total.toLocaleString('vi-VN');
-  }
-
-  function toggleCart() {
-     const cartSec = document.getElementById('cart-section');
-     cartSec.style.display = cartSec.style.display === 'none' ? 'block' : 'none';
-  }
-
-  // Hàm xử lý thanh toán
   function checkout() {
-    if(cart.length === 0) { alert("Giỏ hàng đang trống!"); return; }
+    if(cart.length === 0) { alert("Giỏ hàng trống!"); return; }
     
-    let message = "Tôi muốn đặt mua các món sau:\n";
+    let message = "Đơn hàng mới:\n";
     const counts = {};
     cart.forEach(x => { counts[x.name] = (counts[x.name] || 0) + 1; });
     
@@ -191,19 +190,14 @@
     for (const [name, count] of Object.entries(counts)) {
        const itemPrice = products.find(p => p.name === name).price;
        total += itemPrice * count;
-       message += `- ${name}: ${count}kg (${(itemPrice * count).toLocaleString('vi-VN')}đ)\n`;
+       message += `- ${name}: ${count}kg (x${count})\n`;
     }
-    message += `\nTổng cộng: ${total.toLocaleString('vi-VN')}đ`;
+    message += `\nTổng tiền: ${total.toLocaleString('vi-VN')}đ`;
     
-    // Tùy chọn 1: Hiển thị thông báo để sao chép
-    alert(message + "\n\n(Bạn hãy chụp màn hình hoặc sao chép nội dung này gửi cho cửa hàng nhé!)");
-
-    // Tùy chọn 2: Nếu muốn gửi qua Zalo, bạn có thể mở liên kết (cần số điện thoại cụ thể)
-    // window.open(`https://zalo.me/SDT_CUA_BAN?text=${encodeURIComponent(message)}`);
+    alert(message + "\n\n(Vui lòng cung cấp số điện thoại/địa chỉ để shop liên hệ.)");
   }
 
-  // Chạy hàm hiển thị khi tải trang
-  renderProducts();
+  render();
 </script>
 
 </body>
