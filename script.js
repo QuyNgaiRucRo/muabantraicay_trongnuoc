@@ -16,7 +16,7 @@ const products = [
 let cart = [];
 let currentProductId = null;
 
-// Hàm hiển thị sản phẩm ra màn hình
+// Hiển thị sản phẩm ra màn hình
 function render() {
   const container = document.getElementById('product-list');
   container.innerHTML = ''; 
@@ -35,7 +35,7 @@ function render() {
   });
 }
 
-// Hàm cập nhật giỏ hàng chi tiết (Mới)
+// Cập nhật giỏ hàng chi tiết
 function updateCartList() {
     const cartItemsDiv = document.getElementById('cart-items');
     const totalSpan = document.getElementById('total-price');
@@ -80,10 +80,11 @@ function updateCartList() {
     // Ẩn/Hiện khu vực giỏ hàng
     const cartSec = document.getElementById('cart-section');
     cartSec.style.display = cart.length > 0 ? 'block' : 'none';
+    setTimeout(moveCartElevator, 0);
 }
 
 
-// HÀM MỚI: Giảm số lượng sản phẩm
+// Giảm số lượng sản phẩm
 function decreaseItem(id) {
     const index = cart.findIndex(item => item.id === id);
     if (index !== -1) {
@@ -96,7 +97,7 @@ function decreaseItem(id) {
     updateCartList(); // Cập nhật lại giao diện
 }
 
-// HÀM MỚI: Xóa hẳn sản phẩm khỏi giỏ hàng
+// Xóa hẳn sản phẩm khỏi giỏ hàng
 function removeItem(id) {
     // Xóa tất cả các mục có cùng ID khỏi giỏ hàng
     const product = products.find(p => p.id === id);
@@ -145,10 +146,6 @@ function openModal(id) {
   
   // Hiện popup
   document.getElementById('product-modal').style.display = 'flex';
-
-  // Sửa: Buộc nội dung IFRAME cuộn về đầu (0, 0)
-  // Đảm bảo popup luôn hiển thị ở trung tâm của khung nhúng
-  window.scrollTo(0, 0); 
 }
 
 function closeModal() {
@@ -199,5 +196,37 @@ function checkout() {
     window.open(`https://zalo.me/${ZALO_PHONE}?text=${encodeURIComponent(message)}`, '_blank');
   }
 }
+
+function moveCartElevator() {
+    const cartSec = document.getElementById('cart-section');
+    
+    // Chỉ chạy khi giỏ hàng đang hiển thị
+    if (cartSec.style.display !== 'block') return;
+
+    // 1. Lấy vị trí cuộn hiện tại
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // 2. Lấy chiều cao màn hình người xem
+    const windowHeight = window.innerHeight;
+    
+    // 3. Lấy chiều cao của bản thân giỏ hàng
+    const cartHeight = cartSec.offsetHeight;
+
+    // 4. Tính toán vị trí đích:
+    // Vị trí cuộn + Chiều cao màn hình - Chiều cao giỏ - Khoảng cách đáy (20px)
+    let targetTop = scrollTop + windowHeight - cartHeight - 20;
+    
+    // Đảm bảo không bị trôi lên quá cao (nếu cần)
+    if (targetTop < 0) targetTop = 20;
+
+    // 5. Gán vị trí mới (CSS transition sẽ làm nó trượt êm đến đây)
+    cartSec.style.top = targetTop + 'px';
+}
+
+// Kích hoạt khi cuộn chuột
+window.addEventListener('scroll', moveCartElevator);
+
+// Kích hoạt khi thay đổi kích thước màn hình
+window.addEventListener('resize', moveCartElevator);
 
 render();

@@ -132,25 +132,26 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
 
-/* --- KHU VỰC GIỎ HÀNG CHI TIẾT CỐ ĐỊNH --- */
+/* --- KHU VỰC GIỎ HÀNG --- */
 #cart-section {
-    position: fixed;
-    bottom: 20px;
+    position: absolute; 
     right: 20px;
-    width: 250px; /* Chiều rộng cố định */
+    width: 250px; 
     background: white;
     border: 2px solid #d32f2f;
     border-radius: 10px;
     padding: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    display: none; /* Mặc định ẩn, sẽ hiện khi có hàng */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: none; 
     z-index: 1000;
+    
+    /* HIỆU ỨNG THANG MÁY: */
+    transition: top cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .cart-header { font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
 .cart-item { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
 .cart-total { font-weight: bold; color: #d32f2f; text-align: right; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 5px; }
-
 .btn-checkout { background-color: #d32f2f; width: 100%; margin-top: 10px; }
 
 
